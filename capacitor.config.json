@@ -1,0 +1,30 @@
+{
+  "appId": "com.luachsport.glow",
+  "appName": "Glow",
+  "webDir": "www",
+  "backgroundColor": "#160B26",
+  "android": {
+    "backgroundColor": "#160B26",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "StatusBar": {
+      "backgroundColor": "#160B26",
+      "style": "DARK",
+      "overlaysWebView": false
+    },
+    "CapacitorUpdater": {
+      "autoUpdate": false,
+      "statsUrl": "",
+      "updateUrl": "",
+      "channelUrl": "",
+      "allowModifyUrl": false,
+      "appReadyTimeout": 15000,
+      "autoDeleteFailed": true,
+      "autoDeletePrevious": true,
+      "resetWhenUpdate": true,
+      "shakeMenu": false,
+      "disableJSLogging": true
+    }
+  }
+}

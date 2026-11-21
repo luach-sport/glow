@@ -1,0 +1,33 @@
+/* Glow's colours and font on top of the shared Itzko kit (the same as the app, www/css/base.css). */
+@font-face {
+  font-family: 'Rubik';
+  src: url('../fonts/Rubik-var.ttf') format('truetype');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --primary: #7A2FD8;
+  --primary-text: #6B23C9;
+  --primary-soft: #EFE4FC;
+  --on-primary: #FFFFFF;
+  --hero: #4A1C8A;
+  --hero-ink: #FFFFFF;
+  --hero-muted: #EBDDFF;
+  --hero-btn-ink: #4A1C8A;
+  --maker-accent: #B02474;
+  --credit-accent: #FF7FC0;
+  --credit-mono: #7A2FD8;
+  --credit-mono-ink: #FFFFFF;
+  --credit-glow: rgba(122, 47, 216, 0.22);
+  --shadow: 0 18px 40px -18px rgba(122, 47, 216, 0.45);
+  --font: 'Rubik', 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --primary: #B98BFF; --primary-text: #C9A4FF; --primary-soft: #2D1C4E; --on-primary: #160B26; --hero: #3A1470; --hero-muted: #E2D2FF; --shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7); }
+}
+:root[data-theme="dark"] { --primary: #B98BFF; --primary-text: #C9A4FF; --primary-soft: #2D1C4E; --on-primary: #160B26; --hero: #3A1470; --hero-muted: #E2D2FF; --shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7); }
+.hero { background: linear-gradient(135deg, #4A1C8A 0%, #7A2FD8 55%, #C93589 100%); }
+.walls { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; margin-top: 8px; }
+.walls img { width: 100%; aspect-ratio: 1 / 2; object-fit: cover; border-radius: 6px; display: block; }
+@media (max-width: 700px) { .walls { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

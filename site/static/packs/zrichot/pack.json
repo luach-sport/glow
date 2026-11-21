@@ -1,0 +1,100 @@
+{
+"id": "zrichot",
+"name": "זריחות ושקיעות",
+"kind": "images",
+"version": 1,
+"items": [
+{
+"id": "01",
+"name": "שחר סגלגל",
+"file": "img/01.jpg",
+"thumb": "thumb/01.jpg",
+"parts": [
+"morning"
+]
+},
+{
+"id": "02",
+"name": "בוקר כתום",
+"file": "img/02.jpg",
+"thumb": "thumb/02.jpg",
+"parts": [
+"morning"
+]
+},
+{
+"id": "03",
+"name": "זריחה בדיונות",
+"file": "img/03.jpg",
+"thumb": "thumb/03.jpg",
+"parts": [
+"morning"
+]
+},
+{
+"id": "04",
+"name": "הר בשחר",
+"file": "img/04.jpg",
+"thumb": "thumb/04.jpg",
+"parts": [
+"morning"
+]
+},
+{
+"id": "05",
+"name": "זהב של בוקר",
+"file": "img/05.jpg",
+"thumb": "thumb/05.jpg",
+"parts": [
+"morning",
+"noon"
+]
+},
+{
+"id": "06",
+"name": "שקיעה אדומה",
+"file": "img/06.jpg",
+"thumb": "thumb/06.jpg",
+"parts": [
+"evening"
+]
+},
+{
+"id": "07",
+"name": "ערב ורוד",
+"file": "img/07.jpg",
+"thumb": "thumb/07.jpg",
+"parts": [
+"evening"
+]
+},
+{
+"id": "08",
+"name": "רכס בשקיעה",
+"file": "img/08.jpg",
+"thumb": "thumb/08.jpg",
+"parts": [
+"evening"
+]
+},
+{
+"id": "09",
+"name": "אחרון האור",
+"file": "img/09.jpg",
+"thumb": "thumb/09.jpg",
+"parts": [
+"evening",
+"night"
+]
+},
+{
+"id": "10",
+"name": "שקיעה במדבר",
+"file": "img/10.jpg",
+"thumb": "thumb/10.jpg",
+"parts": [
+"evening"
+]
+}
+]
+}

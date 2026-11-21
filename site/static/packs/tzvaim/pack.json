@@ -1,0 +1,106 @@
+{
+"id": "tzvaim",
+"name": "צבעים רכים",
+"kind": "images",
+"version": 1,
+"items": [
+{
+"id": "01",
+"name": "סגול עמוק",
+"file": "img/01.jpg",
+"thumb": "thumb/01.jpg",
+"parts": [
+"evening",
+"night"
+]
+},
+{
+"id": "02",
+"name": "ורוד בהיר",
+"file": "img/02.jpg",
+"thumb": "thumb/02.jpg",
+"parts": [
+"morning",
+"noon"
+]
+},
+{
+"id": "03",
+"name": "תכלת רגוע",
+"file": "img/03.jpg",
+"thumb": "thumb/03.jpg",
+"parts": [
+"morning",
+"noon"
+]
+},
+{
+"id": "04",
+"name": "ירוק מנטה",
+"file": "img/04.jpg",
+"thumb": "thumb/04.jpg",
+"parts": [
+"morning",
+"noon"
+]
+},
+{
+"id": "05",
+"name": "לילה כחול",
+"file": "img/05.jpg",
+"thumb": "thumb/05.jpg",
+"parts": [
+"night"
+]
+},
+{
+"id": "06",
+"name": "זהב חם",
+"file": "img/06.jpg",
+"thumb": "thumb/06.jpg",
+"parts": [
+"morning",
+"evening"
+]
+},
+{
+"id": "07",
+"name": "אפרסק",
+"file": "img/07.jpg",
+"thumb": "thumb/07.jpg",
+"parts": [
+"morning",
+"noon"
+]
+},
+{
+"id": "08",
+"name": "לבנדר",
+"file": "img/08.jpg",
+"thumb": "thumb/08.jpg",
+"parts": [
+"noon",
+"evening"
+]
+},
+{
+"id": "09",
+"name": "ים כהה",
+"file": "img/09.jpg",
+"thumb": "thumb/09.jpg",
+"parts": [
+"evening",
+"night"
+]
+},
+{
+"id": "10",
+"name": "גחלים",
+"file": "img/10.jpg",
+"thumb": "thumb/10.jpg",
+"parts": [
+"night"
+]
+}
+]
+}

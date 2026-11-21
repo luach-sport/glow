@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/glow_w_bg"
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/glow_w_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:textColor="#FFFFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textDirection="rtl"
+        android:text="רקע חדש. כוח חדש." />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/glow_w_next"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="רקע חדש"
+            android:src="@drawable/glow_w_refresh" />
+
+        <ImageButton
+            android:id="@+id/glow_w_quote"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="משפט חדש"
+            android:src="@drawable/glow_w_quote" />
+
+        <ImageButton
+            android:id="@+id/glow_w_fav"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="למועדפים"
+            android:src="@drawable/glow_w_heart" />
+    </LinearLayout>
+</LinearLayout>
