@@ -10,3 +10,4 @@ dist/
 tests/shots/
 _site/
 .kit/
+node_modules
