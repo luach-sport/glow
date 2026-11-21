@@ -33,7 +33,10 @@
 
   A['image-now'] = async (el) => {
     const id = el.dataset.id, img = GL.imageById(id);
-    if (img && img.off) { GL.setImgMeta(id, 'off', false); GL.save(); await GL.syncEngine(false, true); }
+    if (img && img.off) GL.setImgMeta(id, 'off', false);
+    if (!GL.wallsOn()) GL.state.walls.home = true;
+    GL.save();
+    await GL.syncEngine(false, true);
     const r = await GL.engine('setNow', { key: el.dataset.key || null, img: id, imgEntry: GL.imgEntry(img) });
     GL.closeSheet();
     GL.toast(r && r.ok === false ? 'לא הצלחתי לשים את התמונה' : 'הרקע הוחלף', 4000);
@@ -61,7 +64,7 @@
     GL.save(); GL.closeSheet(); GL.toast('התמונה נמחקה'); GL.render(true);
   };
   A['share-image'] = async (el) => {
-    const c = GL.views.current(GL.activeKeys()[0]), q = c.quote ? GL.quoteById(c.quote) : null;
+    const q = GL.views.curQuote();
     const b64 = await GL.renderJpeg(el.dataset.id, q ? q.t : '');
     await GL.shareImage(b64, 'glow-' + Date.now() + '.jpg', (q ? q.t + '\n\n' : '') + 'מתוך Glow: ' + GL.SITE_URL);
   };

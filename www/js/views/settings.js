@@ -1,4 +1,4 @@
-/* Settings: one wallpaper for both screens or each its own, hours of the day, background running, widget,
+/* Settings: the sentences, the widget, Glow's wallpapers, hours of the day, background running,
    look, feedback, updates, sharing the app, and the credit. */
 (function () {
   'use strict';
@@ -11,22 +11,20 @@
     const themes = [{ v: 'light', l: 'בהיר' }, { v: 'dark', l: 'כהה' }, { v: 'system', l: 'לפי הטלפון' }];
     const hh = (n) => String(n).padStart(2, '0') + ':00';
     let h = '<header class="top"><h1 class="h1">הגדרות</h1></header>';
-    h += '<span class="section-label">מסכים</span><div class="card pad stack">' +
-      '<div class="field"><span class="label">מסך הבית ומסך הנעילה</span>' +
-      V.seg('set-mode', [{ v: 'same', l: 'אותו רקע' }, { v: 'separate', l: 'כל אחד בנפרד' }], S.mode, 'מסכים') +
-      '<span class="hint">' + (S.mode === 'same' ? 'רקע אחד לשני המסכים (או רק לאחד מהם), עם הגדרה אחת של מתי מחליפים.' : 'לכל מסך תמונות, משפטים וזמנים משלו.') + '</span></div></div>';
-    h += '<div class="card list">' +
-      GL.activeKeys().map((k) => V.navRow('open-rotation', k === 'home' ? 'home' : k === 'lock' ? 'lock' : 'phone', V.keyName(k), V.rotSummary(k), '', ' data-key="' + k + '"')).join('') +
-      V.navRow('open-sheet', 'palette', 'עיצוב המשפט', 'מיקום, גודל, צבע וגופן', '', ' data-sheet="style"') +
+    const Q = S.quotes;
+    h += '<span class="section-label">מה Glow עושה</span><div class="card list">' +
+      V.navRow('open-sheet', 'quote', 'משפטים', Q.on ? V.whenText(Q) + ' · בבית בווידג\'ט · בנעילה ' + ({ notification: 'בהודעה', wallpaper: 'על הרקע', off: 'בלי' })[V.lockMode()] : 'כבוי', '', ' data-sheet="qset"') +
+      V.navRow('open-sheet', 'widget', 'הווידג\'ט', 'מראה, צבע, יישור וכפתורים', GL.live.widgets ? 'במסך הבית' : '', ' data-sheet="widget"') +
+      V.navRow('open-sheet', 'image', 'רקעים מ-Glow', GL.wallsOn() ? GL.activeKeys().map((k) => V.keyName(k) + ' ' + V.whenText(GL.rot(k).img)).join(' · ') : 'כבוי – הרקעים שלך', '', ' data-sheet="walls"') +
+      V.navRow('open-sheet', 'palette', 'עיצוב המשפט על הרקע', 'כשהמשפט מודפס על רקע הנעילה, ובשיתוף כתמונה', '', ' data-sheet="style"') +
       V.navRow('open-sheet', 'sun', 'שעות היום', 'מתי מתחילים בוקר, צהריים, ערב ולילה', 'בוקר ' + hh(p.morning) + ' · לילה ' + hh(p.night), ' data-sheet="parts"') +
       '</div>';
     if (GL.isNative()) {
       h += '<span class="section-label">עבודה ברקע</span><div class="card list">' +
         V.navRow('open-battery', 'bolt', 'בלי הגבלת סוללה', 'שההחלפות לא ייעצרו כשהטלפון חוסך סוללה', L.batteryFree ? 'מאושר' : 'לא מאושר') +
-        (L.sdk >= 33 ? V.navRow('ask-notif', 'bell', 'הודעה שקטה', 'צריך רק להחלפה בכל הדלקת מסך', L.notifications ? 'מאושר' : 'לא מאושר') : '') +
-        V.navRow('pin-widget', 'widget', 'ווידג\'ט למסך הבית', 'המשפט של עכשיו, רקע חדש, משפט חדש ולב') +
+        (L.sdk >= 33 ? V.navRow('ask-notif', 'bell', 'הודעות', 'למשפט במסך הנעילה ולהחלפה בכל הדלקה', L.notifications ? 'מאושר' : 'לא מאושר') : '') +
         '</div>' +
-        '<p class="fine">ההחלפות קורות גם כשהאפליקציה סגורה. "כל הדלקת מסך" מחליף ברגע שהמסך נכבה, כדי שהרקע החדש כבר יחכה בהדלקה הבאה.</p>';
+        '<p class="fine">ההחלפות קורות גם כשהאפליקציה סגורה. "כל הדלקת מסך" מחליף ברגע שהמסך נכבה, כדי שהחדש כבר יחכה בהדלקה הבאה. ההודעה השקטה צריכה רק להחלפה בכל הדלקה ולמשפט במסך הנעילה.</p>';
     }
     h += '<span class="section-label">תצוגה</span>' + V.seg('set-theme', themes, S.settings.theme, 'מראה');
     h += '<span class="section-label">כללי</span><div class="card list">' +

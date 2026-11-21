@@ -48,6 +48,7 @@ final class Store {
         try (FileOutputStream out = new FileOutputStream(tmp)) { out.write(cfg.toString().getBytes(StandardCharsets.UTF_8)); }
         if (!tmp.renameTo(f)) { f.delete(); tmp.renameTo(f); }
         cached = cfg;
+        prefs(c).edit().putLong("cfgVer", System.currentTimeMillis()).apply();
     }
 
     static JSONArray rotations(Context c) {

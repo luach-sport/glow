@@ -1,70 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/glow_w_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/glow_w_bg"
+    android:background="@drawable/glow_w_bg_glass"
     android:orientation="vertical"
     android:layoutDirection="rtl"
-    android:paddingLeft="14dp"
-    android:paddingRight="14dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="4dp">
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="2dp">
 
-    <TextView
-        android:id="@+id/glow_w_text"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textColor="#FFFFFFFF"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textDirection="rtl"
-        android:lineSpacingMultiplier="1.1"
-        android:shadowColor="#AA000000"
-        android:shadowDy="2"
-        android:shadowRadius="6"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="13sp"
-        android:autoSizeMaxTextSize="40sp"
-        android:autoSizeStepGranularity="1sp"
-        android:text="רקע חדש. כוח חדש." />
+        android:layout_weight="1">
+
+        <AdapterViewFlipper
+            android:id="@+id/glow_w_flip"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autoStart="true"
+            android:flipInterval="10000"
+            android:loopViews="true"
+            android:inAnimation="@android:animator/fade_in"
+            android:outAnimation="@android:animator/fade_out" />
+
+        <TextView
+            android:id="@+id/glow_w_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="רקע חדש. כוח חדש. ✨" />
+    </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/glow_w_row"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="30dp"
         android:gravity="center"
-        android:alpha="0.85"
+        android:alpha="0.8"
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/glow_w_quote"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:contentDescription="משפט הבא"
+            android:src="@drawable/glow_w_quote" />
+
+        <ImageButton
             android:id="@+id/glow_w_next"
-            android:layout_width="44dp"
-            android:layout_height="34dp"
-            android:padding="6dp"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
             android:contentDescription="רקע חדש"
             android:src="@drawable/glow_w_refresh" />
 
         <ImageButton
-            android:id="@+id/glow_w_quote"
-            android:layout_width="44dp"
-            android:layout_height="34dp"
-            android:padding="6dp"
+            android:id="@+id/glow_w_open"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
-            android:contentDescription="משפט חדש"
-            android:src="@drawable/glow_w_quote" />
-
-        <ImageButton
-            android:id="@+id/glow_w_fav"
-            android:layout_width="44dp"
-            android:layout_height="34dp"
-            android:padding="6dp"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:contentDescription="למועדפים"
-            android:src="@drawable/glow_w_heart" />
+            android:contentDescription="פתיחת Glow"
+            android:src="@drawable/glow_w_spark" />
     </LinearLayout>
 </LinearLayout>

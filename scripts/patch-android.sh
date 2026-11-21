@@ -40,6 +40,7 @@ COMP='        <receiver android:name=".AlarmReceiver" android:exported="false" /
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/glow_widget_info" />
         </receiver>
+        <service android:name=".GlowWidgetService" android:exported="false" android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name=".ScreenService" android:exported="false" android:foregroundServiceType="specialUse">
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Changes the wallpaper each time the screen turns off, as the user chose" />
         </service>

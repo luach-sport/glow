@@ -18,24 +18,27 @@
   A['update-now'] = () => GL.update.apply();
   A['update-later'] = () => { if (GL.update.info) GL.state.updateSeen = GL.update.info.build; GL.save(); GL.closeSheet(); };
 
-  A['wel-where'] = (el) => { ui.form.where = el.dataset.v; GL.renderSheet(); };
+  A['wel-walls'] = (el) => { ui.form.walls = el.dataset.v; GL.renderSheet(); };
+  A['wel-lock'] = (el) => { ui.form.lock = el.dataset.v; GL.renderSheet(); };
   A['wel-when'] = (el) => { ui.form.when = el.dataset.v; GL.renderSheet(); };
   A['finish-welcome'] = async () => {
-    const f = ui.form, r = GL.rot('both');
-    r.targets = { home: f.where !== 'lock', lock: f.where !== 'home' };
-    r.quoteWhere = 'lock';
-    if (f.when === 'screen') { r.img = { mode: 'screen', every: 60 }; r.quote = { on: true, mode: 'screen', every: 60 }; }
-    else if (f.when === 'hour') { r.img = { mode: 'interval', every: 60 }; r.quote = { on: true, mode: 'screen', every: 60 }; }
-    else if (f.when === 'parts') { r.img = { mode: 'parts', every: 60 }; r.quote = { on: true, mode: 'parts', every: 60 }; }
-    else { r.img = { mode: 'interval', every: 1440 }; r.quote = { on: true, mode: 'interval', every: 1440 }; }
+    const f = ui.form, Q = GL.state.quotes;
+    GL.state.walls = { home: f.walls === 'both' || f.walls === 'home', lock: f.walls === 'both' || f.walls === 'lock' };
     GL.state.mode = 'same';
+    Q.on = true;
+    Q.lock = f.lock;
+    if (f.when === 's10') { Q.mode = 'seconds'; Q.seconds = 10; }
+    else if (f.when === 'm1') { Q.mode = 'interval'; Q.every = 1; }
+    else if (f.when === 'h1') { Q.mode = 'interval'; Q.every = 60; }
+    else Q.mode = 'screen';
     GL.state.onboarded = true;
     await GL.save(true);
     ui.sheet = null; GL.renderSheet();
-    GL.toast('מכין את הרקע הראשון…', 6000);
+    GL.toast('מכין…', 6000);
     await GL.syncEngine(true, true);
-    if (f.when === 'screen' && GL.isNative() && GL.live.sdk >= 33) await GL.engine('askNotifications');
-    GL.toast('רקע חדש. כוח חדש.');
+    if (GL.isNative() && GL.live.sdk >= 33 && (f.lock === 'notification' || Q.mode === 'screen')) await GL.engine('askNotifications');
     GL.render();
+    GL.toast('עכשיו נוסיף את הווידג\'ט למסך הבית', 3500);
+    setTimeout(() => GL.A['pin-widget'](), 1200);
   };
 })();

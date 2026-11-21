@@ -1,7 +1,7 @@
 {
   "id": "glow",
   "title": "Glow – רקע חדש. כוח חדש.",
-  "description": "Glow מחליף לבד את הרקע של מסך הבית ומסך הנעילה – לפי זמן, בכל הדלקת מסך או לפי שעות היום – ושם עליו משפט של מוטיבציה וחיזוק. 50 תמונות מוכנות, תמונות משלך, משפטים משלך, חנות חבילות, ווידג'ט. לאנדרואיד, עובד בלי אינטרנט. פותח על ידי Itzko.",
+  "description": "Glow שם על הטלפון משפטים של מוטיבציה וחיזוק – בווידג'ט במסך הבית ובמסך הנעילה – שמתחלפים אפילו כל כמה שניות. עובד עם הרקע שלך, ואם רוצים גם מחליף רקעים. 50 תמונות, 180 משפטים, משפטים ותמונות משלך, חנות חבילות. לאנדרואיד, בלי אינטרנט. פותח על ידי Itzko.",
   "themeColor": "#7A2FD8",
   "icon": "www/icon-512.png",
   "fonts": "www/fonts",
@@ -9,13 +9,32 @@
   "versionFile": "js/version.js",
   "versionGlobal": "GLOW_VERSION",
   "shots": "scripts/site/scenes.mjs",
-  "css": ["brand.css"],
+  "css": [
+    "brand.css"
+  ],
   "creditText": "Glow היא אפליקציה עצמאית של Itzko: בלי פרסומות, בלי הרשמה, והתמונות והמשפטים שלכם נשארים אצלכם בטלפון. כל רעיון או תקלה מגיעים ישירות אליו דרך \"פנייה / הצעת ייעול\" בהגדרות של האפליקציה.",
   "footerNote": "התמונות של Glow מצוירות במיוחד לאפליקציה: נופים וצבעים, בלי אנשים. המשפטים בצילומי המסך הם מתוך האפליקציה.",
   "parts": [
-    "hero", "WHATS_NEW", "offline", "install", "tabs",
-    "ch-home", "ch-when", "ch-style", "ch-history", "ch-images", "ch-quotes", "ch-store", "ch-widget", "ch-settings",
-    "ch-share", "ch-updates", "ch-feedback",
-    "kit:share-band", "kit:credit", "kit:footer"
+    "hero",
+    "WHATS_NEW",
+    "offline",
+    "install",
+    "tabs",
+    "ch-home",
+    "ch-qset",
+    "ch-widget",
+    "ch-walls",
+    "ch-style",
+    "ch-history",
+    "ch-images",
+    "ch-quotes",
+    "ch-store",
+    "ch-settings",
+    "ch-share",
+    "ch-updates",
+    "ch-feedback",
+    "kit:share-band",
+    "kit:credit",
+    "kit:footer"
   ]
 }

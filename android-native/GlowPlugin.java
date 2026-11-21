@@ -35,10 +35,13 @@ public class GlowPlugin extends Plugin {
                 if (r == null) continue;
                 JSONObject st = Store.state(c, r.optString("key"));
                 JSONObject s = new JSONObject();
-                s.put("img", st.optString("img", "")).put("quote", st.optString("quote", "")).put("imgAt", st.optLong("imgAt", 0)).put("quoteAt", st.optLong("quoteAt", 0));
+                s.put("img", st.optString("img", "")).put("imgAt", st.optLong("imgAt", 0));
                 rots.put(r.optString("key"), s);
             }
             o.put("rotations", rots);
+            JSONObject qs = Quotes.state(c), cq = Quotes.current(c);
+            o.put("quote", new JSONObject().put("id", cq == null ? "" : cq.optString("id")).put("at", qs.optLong("at", 0)));
+            o.put("widgets", GlowWidget.ids(c).length);
             o.put("history", Store.history(c));
             o.put("screenService", ScreenService.running);
             o.put("nextAt", Engine.nextDue(c));
@@ -68,14 +71,17 @@ public class GlowPlugin extends Plugin {
             try {
                 Context c = ctx();
                 Store.saveConfig(c, new JSONObject(cfg.toString()));
+                Quotes.resetSeed(c);
+                if (Quotes.on(c) && Quotes.find(c, Quotes.state(c).optString("id", null)) == null) Quotes.next(c, null, "settings");
                 JSONArray rots = Store.rotations(c);
                 for (int i = 0; i < rots.length(); i++) {
                     JSONObject r = rots.optJSONObject(i);
                     if (r == null || !r.optBoolean("on", true)) continue;
                     String key = r.optString("key");
                     boolean fresh = !Store.state(c, key).has("img");
-                    if (applyNow || fresh) Engine.apply(c, key, false, false, null, null, "settings");
+                    if (applyNow || fresh) Engine.apply(c, key, fresh, null, "settings");
                 }
+                ScreenService.refreshNotification(c);
                 Scheduler.refresh(c);
                 GlowWidget.refreshAll(c);
                 call.resolve(status());
@@ -89,17 +95,20 @@ public class GlowPlugin extends Plugin {
     @PluginMethod
     public void change(PluginCall call) {
         final String key = call.getString("key", null);
-        final boolean img = call.getBoolean("image", true), quote = call.getBoolean("quote", true);
+        final boolean img = call.getBoolean("image", false), quote = call.getBoolean("quote", false);
         Engine.WORK.execute(() -> {
             Context c = ctx();
             boolean ok = false;
-            JSONArray rots = Store.rotations(c);
-            for (int i = 0; i < rots.length(); i++) {
-                JSONObject r = rots.optJSONObject(i);
-                if (r == null) continue;
-                String k = r.optString("key");
-                if (key != null && !key.equals(k)) continue;
-                ok |= Engine.apply(c, k, img, quote, null, null, "manual");
+            if (quote) ok = Quotes.next(c, null, "manual");
+            if (img) {
+                JSONArray rots = Store.rotations(c);
+                for (int i = 0; i < rots.length(); i++) {
+                    JSONObject r = rots.optJSONObject(i);
+                    if (r == null) continue;
+                    String k = r.optString("key");
+                    if (key != null && !key.equals(k)) continue;
+                    ok |= Engine.apply(c, k, true, null, "manual");
+                }
             }
             Scheduler.scheduleNext(c);
             JSObject s = status();
@@ -124,16 +133,23 @@ public class GlowPlugin extends Plugin {
                     JSONObject r = rots.optJSONObject(i);
                     if (r == null || (key != null && !key.equals(r.optString("key")))) continue;
                     if (img != null && imgEntry != null && Engine.findImage(r, img) == null) { r.getJSONArray("images").put(new JSONObject(imgEntry.toString())); grew = true; }
-                    if (quote != null && quoteEntry != null && Engine.findQuote(r, quote) == null && r.optJSONArray("quotes") != null) { r.getJSONArray("quotes").put(new JSONObject(quoteEntry.toString())); grew = true; }
                 }
                 if (grew) Store.saveConfig(c, Store.config(c));
             } catch (Exception ignored) { }
-            for (int i = 0; i < rots.length(); i++) {
-                JSONObject r = rots.optJSONObject(i);
-                if (r == null) continue;
-                String k = r.optString("key");
-                if (key != null && !key.equals(k)) continue;
-                ok |= Engine.apply(c, k, false, false, img, quote, "manual");
+            if (quote != null) {
+                try {
+                    if (Quotes.find(c, quote) == null && quoteEntry != null) { Quotes.cfg(c).getJSONArray("list").put(new JSONObject(quoteEntry.toString())); Store.saveConfig(c, Store.config(c)); }
+                } catch (Exception ignored) { }
+                ok |= Quotes.next(c, quote, "manual");
+            }
+            if (img != null) {
+                for (int i = 0; i < rots.length(); i++) {
+                    JSONObject r = rots.optJSONObject(i);
+                    if (r == null) continue;
+                    String k = r.optString("key");
+                    if (key != null && !key.equals(k)) continue;
+                    ok |= Engine.apply(c, k, false, img, "manual");
+                }
             }
             JSObject s = status();
             s.put("ok", ok);
@@ -187,6 +203,17 @@ public class GlowPlugin extends Plugin {
                 c.startActivity(i);
             } catch (Exception ignored) { }
         }
+        call.resolve();
+    }
+
+    /** The phone's own wallpaper picker – to put back your own wallpaper after turning Glow's off. */
+    @PluginMethod
+    public void openWallpaperPicker(PluginCall call) {
+        try {
+            Intent i = Intent.createChooser(new Intent(Intent.ACTION_SET_WALLPAPER), "בחירת רקע");
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+        } catch (Exception ignored) { }
         call.resolve();
     }
 

@@ -5,7 +5,17 @@
   const { esc, icon } = GL;
   const V = GL.views;
 
+  // Arrange mode: the sentences in use, in the order they come, with arrows.
+  V.arrangeList = () => {
+    const list = GL.setQuotes();
+    return '<div class="card list q-list">' + list.slice(0, 300).map((x, i) => '<div class="row q-row arr">' +
+      '<span class="q-num">' + (i + 1) + '</span><button type="button" class="q-main" data-action="open-quote" data-id="' + esc(x.id) + '"><span class="t">' + esc(x.t) + '</span></button>' +
+      '<span class="arr-btns"><button type="button" class="icon-btn" data-action="q-move" data-d="-1" data-id="' + esc(x.id) + '" aria-label="למעלה"' + (i ? '' : ' aria-disabled="true"') + '>' + icon('arrowUp', 'sm') + '</button>' +
+      '<button type="button" class="icon-btn" data-action="q-move" data-d="1" data-id="' + esc(x.id) + '" aria-label="למטה"' + (i < list.length - 1 ? '' : ' aria-disabled="true"') + '>' + icon('arrowDown', 'sm') + '</button></span></div>').join('') + '</div>';
+  };
+
   V.quoteList = () => {
+    if (GL.ui.arrange) return V.arrangeList();
     const f = GL.ui.qFilter, q = GL.ui.q.trim();
     let list = GL.allQuotes().filter((x) => (f === 'off' ? x.off : GL.inSet(x, f)));
     if (q) list = list.filter((x) => x.t.indexOf(q) >= 0);
@@ -25,7 +35,11 @@
     const f = GL.ui.qFilter;
     const sets = GL.quoteSets();
     const offN = GL.allQuotes().filter((x) => x.off).length;
-    let h = '<header class="top"><h1 class="h1">משפטים</h1><span class="count">' + GL.allQuotes().filter((x) => !x.off).length + ' בסבב</span></header>';
+    let h = '<header class="top"><h1 class="h1">משפטים</h1><button type="button" class="pill-btn' + (GL.ui.arrange ? '' : ' ghost') + '" data-action="toggle-arrange">' + icon(GL.ui.arrange ? 'check' : 'list', 'sm') + (GL.ui.arrange ? 'סיום סידור' : 'סידור') + '</button></header>';
+    if (GL.ui.arrange) {
+      return h + '<div class="notice accent">' + icon('info', 'sm') + '<span class="grow">כך המשפטים יופיעו, מלמעלה למטה' + (GL.state.quotes.order === 'list' ? '.' : '. הסדר נשמר גם כשהמשפטים מוצגים באקראי, ונכנס לפעולה כשבוחרים "לפי הסדר שלי".') + ' הקבוצה: ' + esc(GL.setName(GL.state.quotes.set)) + '.</span></div>' +
+        '<div id="q-results">' + V.arrangeList() + '</div>';
+    }
     h += '<div class="btn-row"><button type="button" class="btn small" data-action="new-quote">' + icon('plus') + 'משפט חדש</button>' +
       '<button type="button" class="btn small secondary" data-action="import-quotes">' + icon('download') + 'ייבוא</button>' +
       '<button type="button" class="btn small secondary" data-action="export-quotes">' + icon('upload') + 'ייצוא</button></div>';

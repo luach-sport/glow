@@ -77,10 +77,27 @@
     const pick = all.filter((i) => GL.inAlbum(i, r.album));
     return pick.length ? pick : all.length ? all : GL.allImages();
   };
-  GL.rotQuotes = (r) => {
+  // The sentences in use (the chosen set, without the ones taken out), in the user's order when they set one.
+  GL.orderQuotes = (list) => {
+    const rank = {};
+    GL.state.qOrder.forEach((id, i) => { rank[id] = i; });
+    return list.map((q, i) => ({ q, k: rank[q.id] != null ? rank[q.id] : 100000 + i })).sort((a, b) => a.k - b.k).map((x) => x.q);
+  };
+  GL.setQuotes = () => {
     const all = GL.allQuotes().filter((q) => !q.off);
-    const pick = all.filter((q) => GL.inSet(q, r.quoteSet));
-    return pick.length ? pick : all;
+    const pick = all.filter((q) => GL.inSet(q, GL.state.quotes.set));
+    return GL.orderQuotes(pick.length ? pick : all);
+  };
+  // Move a sentence in the user's order (delta -1 = up, +1 = down, 'top' = first).
+  GL.moveQuote = (id, delta) => {
+    const list = GL.setQuotes().map((q) => q.id);
+    const i = list.indexOf(id);
+    if (i < 0) return;
+    list.splice(i, 1);
+    const j = delta === 'top' ? 0 : Math.max(0, Math.min(list.length, i + delta));
+    list.splice(j, 0, id);
+    const rest = GL.state.qOrder.filter((x) => !list.includes(x));
+    GL.state.qOrder = list.concat(rest).slice(0, 3000);
   };
 
   const setMeta = (store, id, k, v) => {

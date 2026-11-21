@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+    <TextView
+        android:id="@+id/glow_w_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="#FFFFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textDirection="rtl"
+        android:lineSpacingMultiplier="1.1"
+        android:shadowColor="#99000000"
+        android:shadowDy="2"
+        android:shadowRadius="6"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="42sp"
+        android:autoSizeStepGranularity="1sp" />
+
+    <ImageView
+        android:id="@+id/glow_w_fav"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:padding="3dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="למועדפים"
+        android:src="@drawable/glow_w_heart" />
+</LinearLayout>

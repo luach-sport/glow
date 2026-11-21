@@ -8,11 +8,10 @@
 
   GL.SHEETS.style = {
     full: true,
-    title: () => 'עיצוב המשפט',
+    title: () => 'עיצוב המשפט על הרקע',
     render: () => {
-      const s = GL.state.style, k = GL.activeKeys()[0], c = V.current(k);
-      const q = c.quote || (GL.rotQuotes(GL.rot(k))[0] || {}).id || '';
-      let h = '<div class="style-preview">' + V.phone(c.img, q, true, false, '', 'big') + '</div>';
+      const s = GL.state.style, q = V.curQuote(), img = V.wallOn('lock') || (GL.rotImages(GL.rot('both'))[0] || {}).id;
+      let h = '<p class="fine" style="font-size:14px">כך נראה המשפט כשהוא מודפס על רקע הנעילה של Glow, ובתמונות ששולחים בשיתוף.</p><div class="style-preview">' + V.phone(img, q ? q.id : '', true, true, '', 'big') + '</div>';
       h += '<div class="field"><span class="label">מיקום</span>' + V.seg('style-set', [{ v: 'top', l: 'למעלה' }, { v: 'middle', l: 'באמצע' }, { v: 'bottom', l: 'למטה' }], s.pos, 'מיקום', ' data-k="pos"') + '</div>';
       h += '<div class="field"><span class="label">גודל</span>' + V.seg('style-set', [{ v: 's', l: 'קטן' }, { v: 'm', l: 'רגיל' }, { v: 'l', l: 'גדול' }, { v: 'xl', l: 'ענק' }], s.size, 'גודל', ' data-k="size"') + '</div>';
       h += '<div class="field"><span class="label">צבע</span><div class="swatches">' + COLORS.map((c2) => '<button type="button" class="swatch" style="--c:' + c2 + '" data-action="style-set" data-k="color" data-v="' + c2 + '" aria-pressed="' + (s.color.toUpperCase() === c2) + '" aria-label="צבע ' + c2 + '"></button>').join('') + '</div></div>';

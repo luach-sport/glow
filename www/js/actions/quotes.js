@@ -6,6 +6,13 @@
   const A = GL.A;
   const ui = GL.ui;
 
+  A['toggle-arrange'] = () => { ui.arrange = !ui.arrange; GL.render(); };
+  A['q-move'] = (el) => {
+    GL.moveQuote(el.dataset.id, +el.dataset.d);
+    if (GL.state.quotes.order !== 'list') { GL.state.quotes.order = 'list'; GL.toast('עכשיו המשפטים לפי הסדר שלך'); }
+    GL.save(); GL.part('q-results', GL.views.arrangeList());
+  };
+  A['q-top'] = (el) => { GL.moveQuote(el.dataset.id, 'top'); GL.state.quotes.order = 'list'; GL.save(); GL.closeSheet(); GL.toast('המשפט ראשון בתור'); GL.render(true); };
   A['q-filter'] = (el) => { ui.qFilter = el.dataset.v; GL.render(true); };
   A['clear-q'] = () => { ui.q = ''; GL.render(true); };
   GL.searchQuotes = (v) => {
@@ -46,18 +53,17 @@
   A['quote-now'] = async (el) => {
     const id = el.dataset.id, q = GL.quoteById(id);
     if (q && q.off) GL.setQMeta(id, 'off', false);
-    // The sentence may be outside the set a rotation uses: send it along so it can be shown now.
-    GL.activeKeys().forEach((k) => { const r = GL.rot(k); if (!r.quote.on) r.quote.on = true; });
+    if (!GL.state.quotes.on) GL.state.quotes.on = true;
     GL.save();
     await GL.syncEngine(false, true);
     const r = await GL.engine('setNow', { quote: id, quoteEntry: { id, t: q.t, fav: !!q.fav } });
     GL.closeSheet();
-    GL.toast(r && r.ok === false ? 'לא הצלחתי לשים את המשפט' : 'המשפט על הרקע', 4000);
+    GL.toast(r && r.ok === false ? 'לא הצלחתי לשים את המשפט' : 'המשפט על המסך ✨', 3000);
     GL.render(true);
   };
   A['share-quote'] = async (el) => {
-    const q = GL.quoteById(el.dataset.id), c = GL.views.current(GL.activeKeys()[0]);
-    const b64 = await GL.renderJpeg(c.img, q.t);
+    const q = GL.quoteById(el.dataset.id), img = GL.views.wallOn('lock') || GL.views.wallOn('home') || (GL.rotImages(GL.rot('both'))[0] || {}).id;
+    const b64 = await GL.renderJpeg(img, q.t);
     await GL.shareImage(b64, 'glow-' + Date.now() + '.jpg', q.t + '\n\nמתוך Glow: ' + GL.SITE_URL);
   };
   A['copy-quote'] = async (el) => { const q = GL.quoteById(el.dataset.id); if (await GL.writeClipboard(q.t)) GL.toast('המשפט הועתק'); };

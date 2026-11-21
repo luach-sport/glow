@@ -6,17 +6,12 @@
   const one = (v, list, def) => (list.indexOf(v) >= 0 ? v : def);
   const MODES = ['interval', 'screen', 'parts', 'manual'];
 
-  function rotation(r, def) {
+  function rotation(r) {
     r = isObj(r) ? r : {};
-    const img = isObj(r.img) ? r.img : {}, q = isObj(r.quote) ? r.quote : {}, t = isObj(r.targets) ? r.targets : def.targets;
+    const img = isObj(r.img) ? r.img : {};
     return {
-      on: r.on !== false,
-      targets: { home: t.home !== false && !!t.home, lock: !!t.lock },
       album: typeof r.album === 'string' ? r.album.slice(0, 60) : 'all',
-      quoteSet: typeof r.quoteSet === 'string' ? r.quoteSet.slice(0, 60) : 'all',
-      img: { mode: one(img.mode, MODES, def.img.mode), every: GL.EVERY.indexOf(+img.every) >= 0 ? +img.every : def.img.every },
-      quote: { on: q.on !== false, mode: one(q.mode, MODES, def.quote.mode), every: GL.EVERY.indexOf(+q.every) >= 0 ? +q.every : def.quote.every },
-      quoteWhere: one(r.quoteWhere, ['both', 'lock', 'home'], 'both')
+      img: { mode: one(img.mode, MODES, 'interval'), every: GL.EVERY.indexOf(+img.every) >= 0 ? +img.every : 60 }
     };
   }
   const meta = (m) => {
@@ -45,13 +40,26 @@
       updateSeen: +raw.updateSeen || 0
     });
     const rot = isObj(raw.rot) ? raw.rot : {};
-    s.rot = { both: rotation(rot.both, d.rot.both), home: rotation(rot.home, d.rot.home), lock: rotation(rot.lock, d.rot.lock) };
-    s.rot.home.targets = { home: true, lock: false };
-    s.rot.lock.targets = { home: false, lock: true };
-    if (!s.rot.both.targets.home && !s.rot.both.targets.lock) s.rot.both.targets = { home: true, lock: true };
-    // Version 2: the sentence moved off the home screen (app icons cover it) into the widget.
-    if ((+raw.v || 1) < 2 && s.rot.both.quoteWhere === 'both') s.rot.both.quoteWhere = 'lock';
-    s.v = 2;
+    s.rot = { both: rotation(rot.both), home: rotation(rot.home), lock: rotation(rot.lock) };
+    const old = isObj(rot.both) ? rot.both : {};
+    const w = isObj(raw.walls) ? raw.walls : null;
+    // Before version 3 Glow always set the wallpaper: keep it on where it was on.
+    s.walls = w ? { home: !!w.home, lock: !!w.lock } : (+raw.v || 1) < 3 && raw.onboarded ? { home: !isObj(old.targets) || old.targets.home !== false, lock: !isObj(old.targets) || !!old.targets.lock } : { home: false, lock: false };
+    const q = isObj(raw.quotes) ? raw.quotes : {};
+    const oq = isObj(old.quote) ? old.quote : {};
+    s.quotes = {
+      on: isObj(raw.quotes) ? q.on !== false : oq.on !== false,
+      set: typeof q.set === 'string' ? q.set.slice(0, 60) : typeof old.quoteSet === 'string' ? old.quoteSet : 'all',
+      order: one(q.order, ['random', 'list'], 'random'),
+      mode: one(q.mode, ['seconds'].concat(MODES), isObj(raw.quotes) ? 'seconds' : one(oq.mode, MODES, 'seconds')),
+      seconds: GL.SECONDS.indexOf(+q.seconds) >= 0 ? +q.seconds : 10,
+      every: GL.QEVERY.indexOf(+q.every) >= 0 ? +q.every : 60,
+      lock: one(q.lock, ['notification', 'wallpaper', 'off'], isObj(raw.quotes) ? 'notification' : s.walls.lock && old.quoteWhere !== 'home' ? 'wallpaper' : 'notification')
+    };
+    const wg = isObj(raw.widget) ? raw.widget : {};
+    s.widget = { look: one(wg.look, ['glass', 'dark', 'light', 'clear', 'brand'], 'glass'), color: /^#[0-9A-Fa-f]{6}$/.test(wg.color || '') ? wg.color : '', align: one(wg.align, ['center', 'right'], 'center'), buttons: wg.buttons !== false };
+    s.qOrder = (Array.isArray(raw.qOrder) ? raw.qOrder : []).map((x) => str(x, 60)).slice(0, 3000);
+    s.v = 3;
     const st = isObj(raw.style) ? raw.style : {};
     s.style = {
       pos: one(st.pos, ['top', 'middle', 'bottom'], 'middle'),

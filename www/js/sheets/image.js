@@ -12,11 +12,11 @@
     render: (d) => {
       const i = GL.imageById(d.id);
       if (!i) return '<p class="fine">התמונה כבר לא קיימת.</p>';
-      const k = GL.activeKeys()[0], c = V.current(k);
-      let h = '<div class="style-preview">' + V.phone(i.id, c.quote, GL.rot(k).quote.on, false, '', 'big') + '</div>';
+      let h = '<div class="style-preview">' + V.phone(i.id, '', false, false, '', 'big') + '</div>';
       h += '<div class="btn-row"><button type="button" class="btn" data-action="image-now" data-id="' + esc(i.id) + '">' + icon('check') + 'לשים עכשיו</button>' +
         '<button type="button" class="btn secondary' + (i.fav ? ' on' : '') + '" data-action="fav-image" data-id="' + esc(i.id) + '" aria-pressed="' + i.fav + '">' + icon(i.fav ? 'heartFill' : 'heart') + (i.fav ? 'במועדפים' : 'למועדפים') + '</button></div>';
-      if (GL.state.mode === 'separate') {
+      if (!GL.wallsOn()) h += '<p class="fine" style="text-align:center">"לשים עכשיו" ידליק את הרקעים של Glow במסך הבית.</p>';
+      if (GL.activeKeys().length > 1) {
         h += '<div class="btn-row"><button type="button" class="btn small secondary" data-action="image-now" data-key="lock" data-id="' + esc(i.id) + '">' + icon('lock', 'sm') + 'רק בנעילה</button>' +
           '<button type="button" class="btn small secondary" data-action="image-now" data-key="home" data-id="' + esc(i.id) + '">' + icon('home', 'sm') + 'רק בבית</button></div>';
       }

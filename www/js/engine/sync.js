@@ -1,5 +1,5 @@
-/* Turning the app's settings into what the engine needs (engine.json on the phone), and sending it after
-   every change. The engine then works alone – timed alarms, every screen-on, the widget – even when the app is closed. */
+/* Turning the app's settings into what the engine needs (engine.json on the phone): Glow's wallpapers per screen,
+   the sentences (widget, lock screen) and the widget's look – sent after every change. The engine then works alone – timed alarms, every screen-on, the widget – even when the app is closed. */
 (function () {
   'use strict';
   const GL = window.GL;
@@ -8,23 +8,25 @@
 
   function rotationConfig(key) {
     const r = GL.rot(key), S = GL.state;
-    const targets = [];
-    if (r.targets.home) targets.push('home');
-    if (r.targets.lock && GL.live.canLock !== false) targets.push('lock');
-    const where = key === 'both' ? r.quoteWhere : key;
-    const quoteOn = targets.filter((t) => where === 'both' || where === t);
+    const targets = GL.targetsOf(key);
+    const bake = S.quotes.on && S.quotes.lock === 'wallpaper' && targets.includes('lock') ? ['lock'] : [];
+    return { key, on: targets.length > 0, targets, bake, img: { mode: r.img.mode, every: r.img.every }, images: GL.rotImages(r).map(imgEntry) };
+  }
+
+  function quotesConfig() {
+    const Q = GL.state.quotes, S = GL.state;
+    const lock = Q.lock === 'wallpaper' && !GL.targetsOf('both').includes('lock') && !(S.mode === 'separate' && S.walls.lock) ? 'notification' : Q.lock;
     return {
-      key, on: r.on && targets.length > 0, targets, quoteOn,
-      img: { mode: r.img.mode, every: r.img.every },
-      quote: { on: r.quote.on, mode: r.quote.mode, every: r.quote.every },
-      images: GL.rotImages(r).map(imgEntry),
-      quotes: r.quote.on ? GL.rotQuotes(r).map((q) => ({ id: q.id, t: q.t, fav: !!(S.qMeta[q.id] || {}).fav })) : []
+      on: Q.on, mode: Q.mode, seconds: Q.seconds, every: Q.every, order: Q.order, lock,
+      list: Q.on ? GL.setQuotes().map((q) => ({ id: q.id, t: q.t, fav: !!(S.qMeta[q.id] || {}).fav })) : []
     };
   }
 
   GL.engineConfig = () => ({
-    v: 1,
+    v: 3,
     rotations: GL.activeKeys().map(rotationConfig),
+    quotes: quotesConfig(),
+    widget: GL.state.widget,
     style: GL.state.style,
     parts: GL.state.parts
   });

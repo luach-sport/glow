@@ -83,7 +83,8 @@
     if (p.kind === 'images') await GL.deleteDir('glow/packs/' + p.id);
     S().packs = S().packs.filter((x) => x.id !== id);
     p.items.forEach((i) => { delete S().imgMeta[i.id]; delete S().qMeta[i.id]; });
-    ['both', 'home', 'lock'].forEach((k) => { const r = S().rot[k]; if (r.album === 'pack:' + id) r.album = 'all'; if (r.quoteSet === 'pack:' + id) r.quoteSet = 'all'; });
+    ['both', 'home', 'lock'].forEach((k) => { const r = S().rot[k]; if (r.album === 'pack:' + id) r.album = 'all'; });
+    if (S().quotes.set === 'pack:' + id) S().quotes.set = 'all';
     if (!S().store.removed.includes(id)) S().store.removed.push(id);
     GL.save();
     GL.toast('החבילה הוסרה');

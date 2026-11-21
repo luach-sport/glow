@@ -12,6 +12,7 @@
     const list = all.filter((i) => (f === 'off' ? i.off : GL.inAlbum(i, f)));
     const offN = all.filter((i) => i.off).length;
     let h = '<header class="top"><h1 class="h1">תמונות</h1><span class="count">' + all.filter((i) => !i.off).length + ' בסבב</span></header>';
+    if (!GL.wallsOn()) h += '<div class="banner gray"><span class="ic">' + icon('image') + '</span><span class="txt"><span class="t">הרקעים של Glow כבויים</span><span class="s">התמונות כאן נכנסות לפעולה כשמדליקים אותם</span></span><button type="button" class="go" data-action="open-sheet" data-sheet="walls">להדליק</button></div>';
     h += '<button type="button" class="dashed-btn" data-action="add-images">' + icon('plus') + 'הוספת תמונות מהטלפון</button>';
     h += '<div class="chips scroll">' + albums.map((a) => V.chip('img-filter', a.v, a.l, f === a.v, a.v === 'all' ? null : a.n)).join('') +
       (offN ? V.chip('img-filter', 'off', 'מחוץ לסבב', f === 'off', offN) : '') + '</div>';

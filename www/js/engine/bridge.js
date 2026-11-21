@@ -1,23 +1,36 @@
 /* Talking to the wallpaper engine on the phone (android-native/GlowPlugin.java).
-   In a browser (the site's screenshots, tests) a small stand-in picks pictures and sentences in memory. */
+   In a browser (the site's screenshots, tests) a small stand-in keeps the same answers in memory. */
 (function () {
   'use strict';
   const GL = window.GL;
   const NAME = 'GlowWall';
 
-  const sim = { config: null, st: {}, history: [] };
+  const sim = { config: null, st: {}, quote: { id: '', at: 0 }, history: [], widgets: 1 };
   const pickFrom = (list, cur) => { const l = list.filter((x) => x.id !== cur); const p = (l.length ? l : list)[Math.floor(Math.random() * (l.length || list.length))]; return p ? p.id : ''; };
-  function simApply(key, img, quote, forceImg, forceQuote) {
-    const r = (sim.config.rotations || []).find((x) => x.key === key);
+  const rots = () => (sim.config && sim.config.rotations) || [];
+  function simWall(key, fresh, force) {
+    const r = rots().find((x) => x.key === key);
     if (!r) return false;
     const s = sim.st[key] || (sim.st[key] = {});
-    if (forceImg) s.img = forceImg; else if (img || !s.img) { s.img = pickFrom(r.images, s.img); s.imgAt = Date.now(); }
-    if (r.quote.on) { if (forceQuote) s.quote = forceQuote; else if (quote || !s.quote) { s.quote = pickFrom(r.quotes, s.quote); s.quoteAt = Date.now(); } }
-    sim.history.unshift({ ts: Date.now(), key, img: s.img, quote: r.quote.on ? s.quote : '', why: 'manual' });
-    sim.history = sim.history.slice(0, 60);
+    if (force) s.img = force; else if (fresh || !s.img) s.img = pickFrom(r.images, s.img);
+    s.imgAt = Date.now();
+    sim.history.unshift({ ts: Date.now(), key, img: s.img, quote: '', why: 'manual' });
     return true;
   }
-  const simStatus = () => ({ rotations: JSON.parse(JSON.stringify(sim.st)), history: sim.history.slice(), screenService: false, nextAt: Date.now() + 42 * 60e3, part: 'evening', sdk: 34, canLock: true, w: 1080, h: 2340, batteryFree: true, notifications: true });
+  function simQuote(force) {
+    const list = (sim.config && sim.config.quotes.list) || [];
+    if (!list.length) return false;
+    const cur = sim.quote.id;
+    let id = force;
+    if (!id) id = sim.config.quotes.order === 'list' ? (list[(list.findIndex((q) => q.id === cur) + 1) % list.length] || list[0]).id : pickFrom(list, cur);
+    sim.quote = { id, at: Date.now() };
+    sim.history.unshift({ ts: Date.now(), key: 'quote', img: '', quote: id, why: 'manual' });
+    return true;
+  }
+  const simStatus = () => {
+    sim.history = sim.history.slice(0, 60);
+    return { rotations: JSON.parse(JSON.stringify(sim.st)), quote: Object.assign({}, sim.quote), widgets: sim.widgets, history: sim.history.slice(), screenService: false, nextAt: Date.now() + 42 * 60e3, part: 'evening', sdk: 34, canLock: true, w: 1080, h: 2340, batteryFree: true, notifications: true };
+  };
 
   async function call(method, args) {
     if (GL.isNative()) return GL.callRaw(NAME, method, args || {});
@@ -25,11 +38,22 @@
     switch (method) {
       case 'sync': {
         sim.config = args.config;
-        (sim.config.rotations || []).forEach((r) => { if (args.apply || !sim.st[r.key]) simApply(r.key, false, false); });
+        if (!sim.config.quotes.list.some((q) => q.id === sim.quote.id)) simQuote();
+        rots().forEach((r) => { if (args.apply || !sim.st[r.key]) simWall(r.key, !sim.st[r.key]); });
         return simStatus();
       }
-      case 'change': (sim.config.rotations || []).forEach((r) => { if (!args.key || args.key === r.key) simApply(r.key, args.image !== false, args.quote !== false); }); return Object.assign(simStatus(), { ok: true });
-      case 'setNow': (sim.config.rotations || []).forEach((r) => { if (!args.key || args.key === r.key) { if (args.imgEntry && !r.images.some((x) => x.id === args.img)) r.images.push(args.imgEntry); if (args.quoteEntry && !r.quotes.some((x) => x.id === args.quote)) r.quotes.push(args.quoteEntry); simApply(r.key, false, false, args.img, args.quote); } }); return Object.assign(simStatus(), { ok: true });
+      case 'change': {
+        let ok = false;
+        if (args.quote) ok = simQuote() || ok;
+        if (args.image) rots().forEach((r) => { if (!args.key || args.key === r.key) ok = simWall(r.key, true) || ok; });
+        return Object.assign(simStatus(), { ok });
+      }
+      case 'setNow': {
+        let ok = false;
+        if (args.quote) { if (args.quoteEntry && !sim.config.quotes.list.some((q) => q.id === args.quote)) sim.config.quotes.list.push(args.quoteEntry); ok = simQuote(args.quote); }
+        if (args.img) rots().forEach((r) => { if (!args.key || args.key === r.key) { if (args.imgEntry && !r.images.some((x) => x.id === args.img)) r.images.push(args.imgEntry); ok = simWall(r.key, false, args.img) || ok; } });
+        return Object.assign(simStatus(), { ok });
+      }
       case 'undo': return Object.assign(simStatus(), { ok: false });
       case 'takeFavs': return { favs: {} };
       case 'pinWidget': return { ok: false };
