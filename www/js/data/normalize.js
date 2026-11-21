@@ -49,6 +49,9 @@
     s.rot.home.targets = { home: true, lock: false };
     s.rot.lock.targets = { home: false, lock: true };
     if (!s.rot.both.targets.home && !s.rot.both.targets.lock) s.rot.both.targets = { home: true, lock: true };
+    // Version 2: the sentence moved off the home screen (app icons cover it) into the widget.
+    if ((+raw.v || 1) < 2 && s.rot.both.quoteWhere === 'both') s.rot.both.quoteWhere = 'lock';
+    s.v = 2;
     const st = isObj(raw.style) ? raw.style : {};
     s.style = {
       pos: one(st.pos, ['top', 'middle', 'bottom'], 'middle'),

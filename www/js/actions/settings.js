@@ -23,7 +23,7 @@
   A['finish-welcome'] = async () => {
     const f = ui.form, r = GL.rot('both');
     r.targets = { home: f.where !== 'lock', lock: f.where !== 'home' };
-    r.quoteWhere = 'both';
+    r.quoteWhere = 'lock';
     if (f.when === 'screen') { r.img = { mode: 'screen', every: 60 }; r.quote = { on: true, mode: 'screen', every: 60 }; }
     else if (f.when === 'hour') { r.img = { mode: 'interval', every: 60 }; r.quote = { on: true, mode: 'screen', every: 60 }; }
     else if (f.when === 'parts') { r.img = { mode: 'parts', every: 60 }; r.quote = { on: true, mode: 'parts', every: 60 }; }

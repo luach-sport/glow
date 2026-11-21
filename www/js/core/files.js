@@ -41,10 +41,18 @@
   };
   // Downloads straight to a file on the phone (no CORS, no memory spike). Browser: via fetch.
   GL.downloadTo = async (url, path) => {
+    let err = null;
+    for (let i = 0; i < 2; i++) {
+      try {
+        const r = await GL.http(url, { as: 'base64', timeout: 40000 });
+        if (!r.ok) throw new Error('http ' + r.status);
+        const b64 = String(r.data || '').replace(/^data:[^,]*,/, '');
+        if (b64.length < 1000) throw new Error('empty file');
+        return await GL.writeB64(path, b64);
+      } catch (e) { err = e; }
+    }
     if (GL.isNative()) { await GL.callRaw('Filesystem', 'downloadFile', { url, path, directory: DIR, recursive: true }); return path; }
-    const r = await GL.http(url, { as: 'base64', timeout: 30000 });
-    if (!r.ok) throw new Error('http ' + r.status);
-    return GL.writeB64(path, r.data);
+    throw err;
   };
 
   // Loads a picture the user chose, shrinks it for a phone screen and returns JPEG base64 (big + thumbnail).

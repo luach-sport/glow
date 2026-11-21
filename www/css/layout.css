@@ -27,10 +27,10 @@ h1.h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.3px; }
 /* ---------- Banners ---------- */
 .banner { display: flex; align-items: center; gap: 12px; padding: 10px 8px 10px 12px; border-radius: 16px; background: var(--primary-soft); }
 .banner .ic { width: 38px; height: 38px; flex: none; border-radius: 11px; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--primary); }
-.banner .txt { flex: 1; min-width: 0; }
-.banner .t { font-size: 14px; font-weight: 600; }
-.banner .s { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.banner .go { height: 44px; padding: 0 16px; flex: none; border: 0; border-radius: 12px; background: var(--primary); color: var(--on-primary); font-size: 14px; font-weight: 700; }
+.banner .txt { flex: 1; min-width: 0; overflow: hidden; }
+.banner .t { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; }
+.banner .s { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.banner .go { height: 44px; padding: 0 14px; white-space: nowrap; flex: none; border: 0; border-radius: 12px; background: var(--primary); color: var(--on-primary); font-size: 14px; font-weight: 700; }
 .banner .x { width: 36px; height: 44px; border: 0; background: transparent; color: var(--muted); display: flex; align-items: center; justify-content: center; flex: none; }
 .banner.gray { background: var(--surface); border: 1px solid var(--line); }
 .banner.gray .ic { background: var(--inset); color: var(--ink); }

@@ -11,11 +11,11 @@
     quoteSet: 'all',
     img: { mode: 'interval', every: 60 },
     quote: { on: true, mode: 'screen', every: 60 },
-    quoteWhere: 'both'
+    quoteWhere: 'lock'
   });
 
   GL.defaults = () => ({
-    v: 1,
+    v: 2,
     createdAt: Date.now(),
     onboarded: false,
     mode: 'same',

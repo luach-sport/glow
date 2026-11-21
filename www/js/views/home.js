@@ -46,7 +46,7 @@
       h.push('<div class="banner gray"><span class="ic">' + icon('bell') + '</span><span class="txt"><span class="t">הודעה שקטה של Glow</span><span class="s">מאפשרת החלפה בכל הדלקת מסך</span></span><button type="button" class="go" data-action="ask-notif">לאפשר</button></div>');
     }
     if (GL.state.ui.widgetTip && GL.isNative()) {
-      h.push('<div class="banner gray"><span class="ic">' + icon('widget') + '</span><span class="txt"><span class="t">ווידג\'ט למסך הבית</span><span class="s">המשפט של עכשיו, ורקע חדש בלחיצה</span></span><button type="button" class="go" data-action="pin-widget">הוספה</button><button type="button" class="x" data-action="hide-widget-tip" aria-label="לא עכשיו">' + icon('close', 'sm') + '</button></div>');
+      h.push('<div class="banner gray"><span class="ic">' + icon('widget') + '</span><span class="txt"><span class="t">המשפט במסך הבית</span><span class="s">בווידג\'ט שעומד מעל האפליקציות</span></span><button type="button" class="go" data-action="pin-widget">הוספה</button><button type="button" class="x" data-action="hide-widget-tip" aria-label="לא עכשיו">' + icon('close', 'sm') + '</button></div>');
     }
     if (GL.isNative() && GL.live.sdk < 24) h.push('<div class="notice gray">' + icon('info', 'sm') + '<span class="grow">בגרסת האנדרואיד של הטלפון הזה אפשר להחליף רק את מסך הבית.</span></div>');
     return h.join('');

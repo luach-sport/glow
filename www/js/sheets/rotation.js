@@ -37,8 +37,8 @@
           (r.quote.mode === 'interval' ? '<div class="field"><span class="label">כל כמה זמן</span>' + every('quote', r.quote.every, k) + '</div>' : '') +
           '<div class="field"><span class="label">מאיזה משפטים</span><div class="chips scroll">' + GL.quoteSets().filter((s) => s.n > 0 || s.v === r.quoteSet).map((s) => V.chip('rot-set', s.v, s.l, s.v === r.quoteSet, s.n, ' data-key="' + k + '"')).join('') + '</div></div>';
         if (k === 'both' && r.targets.home && r.targets.lock) {
-          h += '<div class="field"><span class="label">איפה להציג את המשפט</span>' + V.seg('rot-where', [{ v: 'both', l: 'בשניהם' }, { v: 'lock', l: 'רק בנעילה' }, { v: 'home', l: 'רק בבית' }], r.quoteWhere, 'איפה להציג') +
-            '<span class="hint">במסך הבית האייקונים עלולים להסתיר את המשפט. במסך הנעילה הוא בולט יותר.</span></div>';
+          h += '<div class="field"><span class="label">איפה להציג את המשפט</span>' + V.seg('rot-where', [{ v: 'lock', l: 'בנעילה + ווידג\'ט' }, { v: 'both', l: 'גם על רקע הבית' }], r.quoteWhere === 'home' ? 'both' : r.quoteWhere, 'איפה להציג') +
+            '<span class="hint">במסך הבית האפליקציות מסתירות משפט שמודפס על הרקע, ולכן שם המשפט מופיע בווידג\'ט – חלון שעומד מעל האפליקציות, בגודל ובמקום שתבחר.</span></div>';
         }
       } else h += '<p class="fine">רק תמונה, בלי משפט.</p>';
       h += '</div>';
